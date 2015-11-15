@@ -16,12 +16,7 @@ Then /I should see "(.*)" before "(.*)"/ do |e1, e2|
   #  page.body is the entire content of the page as a string.
   step %Q{I should see "#{e1}"}
   step %Q{I should see "#{e2}"}
-  if page.body.index(e1) < page.body.index(e2)
-    it_correct = true
-  else
-    it_correct = false
-  end
-  it_correct.should == true
+  page.body.index(e1) < page.body.index(e2)
 end
 
 # Make it easier to express checking or unchecking several boxes at once
@@ -32,18 +27,21 @@ When /I (un)?check the following ratings: (.*)/ do |uncheck, rating_list|
   # HINT: use String#split to split up the rating_list, then
   #   iterate over the ratings and reuse the "When I check..." or
   #   "When I uncheck..." steps in lines 89-95 of web_steps.rb
-  rating_list.split.each do |checkbox|
+  rating_list.split.each do |rating|
     if uncheck
-      step %Q{I uncheck "#{checkbox}"}
+      #step %Q{I uncheck "#{rating}"}
+      uncheck(rating)
     else
-      step %Q{I check "#{checkbox}"}
+      #step %Q{I check "#{rating}"}
+      check(rating)
     end
   end
 end
 
 Then /I should see all the movies/ do
   # Make sure that all the movies in the app are visible in the table
-  Movie.all.each do |m|
-    step "I should see \"#{m.title}\""
+  Movie.all.each do |movie|
+    #step "I should see \"#{movie.title}\""
+    expect(page).to have_content(movie.title)
   end
 end
